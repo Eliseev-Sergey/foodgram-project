@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import RegexValidator
 from django.contrib.auth.models import AbstractUser
 
 from .managers import CustomUserManager
@@ -15,8 +16,10 @@ class CustomUser(AbstractUser):
     username = models.CharField(
         verbose_name='Уникальный юзернейм',
         max_length=150,
-        null=True,
-        blank=True
+        unique=True,
+        null=False,
+        validators=[RegexValidator(regex=r'^[w.@+-]+Z',
+                                   message='Некорректное имя пользователя!')]
     )
     first_name = models.CharField(
         verbose_name='Имя',
@@ -28,11 +31,11 @@ class CustomUser(AbstractUser):
         max_length=150,
         blank=True
     )
-    password = models.CharField(
-        verbose_name='Пароль',
-        max_length=150,
-        blank=True
-    )
+    # password = models.CharField(
+    #     verbose_name='Пароль',
+    #     max_length=150,
+    #     null=False
+    # )
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
