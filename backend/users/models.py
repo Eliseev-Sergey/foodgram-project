@@ -47,7 +47,7 @@ class CustomUser(AbstractUser):
 
 
 class Subscriptions(models.Model):
-    """ Модель подписки на публикации авторов рецептов."""
+    """ Модель подписки на авторов рецептов."""
     author = models.ForeignKey(
         CustomUser,
         on_delete=models.CASCADE,

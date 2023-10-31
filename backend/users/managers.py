@@ -2,11 +2,10 @@ from django.contrib.auth.base_user import BaseUserManager
 
 
 class CustomUserManager(BaseUserManager):
-    """ Пользовательский Manager, который  использует email в качестве
-    уникального идентификатора для аутентификации вместо username.
+    """Пользовательский Manager, который использует email
+    в качестве уникального идентификатора для аутентификации.
     """
     def create_user(self, email, password, **extra_fields):
-        """ Создать и сохранить пользователя по email и password."""
         if not email:
             raise ValueError('Укажите адрес электронной почты!')
         email = self.normalize_email(email)
@@ -16,7 +15,6 @@ class CustomUserManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, password, **extra_fields):
-        """ Создать и сохранить superuser по email и password."""
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_active', True)

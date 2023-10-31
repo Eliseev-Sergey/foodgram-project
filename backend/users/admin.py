@@ -4,7 +4,7 @@ from .models import CustomUser
 
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
-    """ Интерфейс админ-зоны с необходимыми полями модели пользователей."""
+    """Интерфейс админ-зоны с необходимыми полями модели пользователей."""
     list_display = ('email', 'username', 'first_name', 'last_name', 'is_active',)
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
