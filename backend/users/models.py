@@ -39,13 +39,13 @@ class Subscription(models.Model):
     author = models.ForeignKey(
         CustomUser,
         on_delete=models.CASCADE,
-        related_name='follower',
+        related_name='following',
         verbose_name='Автор'
     )
     user = models.ForeignKey(
         CustomUser,
         on_delete=models.CASCADE,
-        related_name='following',
+        related_name='follower',
         verbose_name='Подписчик'
     )
 

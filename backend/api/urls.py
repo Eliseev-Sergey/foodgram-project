@@ -1,16 +1,21 @@
-from django.contrib import admin
-from django.urls import include, path, re_path
-from django.views.generic import TemplateView
-from rest_framework import routers
+from django.urls import include, path
+from rest_framework.routers import DefaultRouter
 
-from api.views import *
+from api.views import (
+    CustomUserViewSet, IngredientViewSet, RecipeViewSet, TagViewSet
+)
 
-app_name = "api"
-router = routers.DefaultRouter()
-# router.register('users', CustomUserViewSet)
+app_name = 'api'
+
+router_v1 = DefaultRouter()
+
+router_v1.register('users', CustomUserViewSet)
+router_v1.register('tags', TagViewSet)
+router_v1.register('ingredients', IngredientViewSet)
+router_v1.register('recipes', RecipeViewSet)
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('', include(router_v1.urls)),
     path('', include('djoser.urls')),
     path('auth/', include('djoser.urls.authtoken')),
 ]
