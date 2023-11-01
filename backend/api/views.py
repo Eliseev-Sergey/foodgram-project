@@ -198,7 +198,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             'Content-Disposition': f'attachment; filename={filename}'
         }
 
-        with open(filename, 'w', encoding='UTF-8') as file:
+        with open(filename, mode='w', encoding='UTF-8') as file:
             file.write(shop_carts)
 
         return FileResponse(open(filename, 'rb'), headers=headers)
