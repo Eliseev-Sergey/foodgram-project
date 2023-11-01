@@ -1,9 +1,11 @@
 from rest_framework import serializers
 from djoser.serializers import UserSerializer, UserCreateSerializer
-from users.models import CustomUser, Subscriptions
+from users.models import CustomUser, Subscription
+
 
 class CustomUserCreateSerializer(UserCreateSerializer):
     """Cериализатор создает пользователя."""
+
     class Meta:
         model = CustomUser
         fields = ('id', 'email', 'username', 'first_name', 'last_name',
@@ -29,4 +31,3 @@ class CustomUserSerializer(UserSerializer):
                 return True
             return False
         return None
-            

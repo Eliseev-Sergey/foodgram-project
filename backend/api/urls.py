@@ -11,6 +11,6 @@ router = routers.DefaultRouter()
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('djoser.urls')),#не точно
-    path('auth/', include('djoser.urls.authtoken')),#не точно
+    path('', include('djoser.urls')),
+    path('auth/', include('djoser.urls.authtoken')),
 ]
