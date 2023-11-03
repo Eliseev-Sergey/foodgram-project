@@ -183,16 +183,48 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'tags', 'ingredients',
                   'text', 'image', 'cooking_time']
 
+    def validate_tags(self, value):
+        tags_id = set()
+        for tag in value:
+            if tag.id in tags_id:
+                raise serializers.ValidationError(
+                    'Укажите уникальный тег'
+                )
+            tags_id.add(tag.id)
+
+        return value
+
+    def validate_cooking_time(self, value):
+        if value and int(value) < 1:
+            raise serializers.ValidationError(
+                'Укажите корректное время приготовления'
+            )
+
+        if value and int(value) > 1000:
+            raise serializers.ValidationError(
+                'Макс. время приготовления 1000'
+            )
+
+        return value
+
     @staticmethod
     def create_ingredients(ingredients, recipe):
-        [
+        ingredients_id = set()
+
+        for ingr in ingredients:
+            curr_ingredient = ingr['id']
+
+            if curr_ingredient.id in ingredients_id:
+                raise serializers.ValidationError(
+                    'Ингредиенты должны быть уникальными'
+                )
+
             IngredientInRecipe.objects.get_or_create(
                 recipe=recipe,
-                ingredient=ingredient['id'],
-                amount=ingredient['amount']
+                ingredient=curr_ingredient['id'],
+                amount=curr_ingredient['amount']
             )
-            for ingredient in ingredients
-        ]
+            ingredients_id.add(curr_ingredient.id)
 
     @transaction.atomic
     def create(self, validated_data):
