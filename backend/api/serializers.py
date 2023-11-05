@@ -24,8 +24,8 @@ class CustomUserSerializer(serializers.ModelSerializer):
     def get_is_subscribed(self, obj):
         user = self.context.get('request').user
         return (
-            user.is_authenticated
-            and user.follower.all().filter(author=obj.id).exists()
+                user.is_authenticated
+                and user.follower.all().filter(author=obj.id).exists()
         )
 
 
@@ -157,15 +157,15 @@ class RecipeListSerializer(serializers.ModelSerializer):
     def check_is_favorite(self, obj):
         user = self.context.get('request').user
         return (
-            user.is_authenticated
-            and obj.favorites.filter(user=user).exists()
+                user.is_authenticated
+                and obj.favorites.filter(user=user).exists()
         )
 
     def check_is_in_cart(self, obj):
         user = self.context.get('request').user
         return (
-            user.is_authenticated
-            and obj.shopping_carts.filter(user=user).exists()
+                user.is_authenticated
+                and obj.shopping_carts.filter(user=user).exists()
         )
 
 
@@ -184,13 +184,13 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
                   'text', 'image', 'cooking_time']
 
     def validate_tags(self, value):
-        tags_id = set()
+        tags_id_list = set()
         for tag in value:
-            if tag.id in tags_id:
+            if tag.id in tags_id_list:
                 raise serializers.ValidationError(
                     'Укажите уникальный тег'
                 )
-            tags_id.add(tag.id)
+            tags_id_list.add(tag.id)
 
         return value
 
@@ -209,22 +209,22 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def create_ingredients(ingredients, recipe):
-        ingredients_id = set()
+        ingredients_id_list = set()
 
-        for ingr in ingredients:
-            curr_ingredient = ingr['id']
+        for item in ingredients:
+            curr_ingredient = item['id']
 
-            if curr_ingredient.id in ingredients_id:
+            if curr_ingredient.id in ingredients_id_list:
                 raise serializers.ValidationError(
                     'Ингредиенты должны быть уникальными'
                 )
 
             IngredientInRecipe.objects.get_or_create(
                 recipe=recipe,
-                ingredient=curr_ingredient['id'],
-                amount=curr_ingredient['amount']
+                ingredient=curr_ingredient,
+                amount=item['amount']
             )
-            ingredients_id.add(curr_ingredient.id)
+            ingredients_id_list.add(curr_ingredient.id)
 
     @transaction.atomic
     def create(self, validated_data):

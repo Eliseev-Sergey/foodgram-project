@@ -57,24 +57,24 @@ TEMPLATES = [
 WSGI_APPLICATION = 'backend.wsgi.application'
 
 # dev mode
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
-# production mode
 # DATABASES = {
 #     'default': {
-#         'ENGINE': config('DB_ENGINE', default='django.db.backends.postgresql', cast=str),
-#         'NAME': config('DB_NAME', default='test_db', cast=str),
-#         'USER': config('POSTGRES_USER', default='postgres', cast=str),
-#         'PASSWORD': config('POSTGRES_PASSWORD', default='dev_mode_1234', cast=str),
-#         'HOST': config('DB_HOST', default='db', cast=str),
-#         'PORT': config('DB_PORT', default='5432', cast=int)
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+
+# production mode
+DATABASES = {
+    'default': {
+        'ENGINE': config('DB_ENGINE', default='django.db.backends.postgresql', cast=str),
+        'NAME': config('DB_NAME', default='test_db', cast=str),
+        'USER': config('POSTGRES_USER', default='postgres', cast=str),
+        'PASSWORD': config('POSTGRES_PASSWORD', default='dev_mode_1234', cast=str),
+        'HOST': config('DB_HOST', default='db', cast=str),
+        'PORT': config('DB_PORT', default='5432', cast=int)
+    }
+}
 
 AUTH_PASSWORD_VALIDATORS = [
     {
