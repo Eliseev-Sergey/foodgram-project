@@ -58,6 +58,7 @@ python3 -m pip install --upgrade pip
 ```
 pip install -r requirements.txt
 ```
+
 4. Выполнить миграции:
 
 ```
@@ -69,6 +70,8 @@ python3 manage.py migrate
 ```
 python3 manage.py runserver
 ```
+
+---
 
 ## Инструкция по установке на удаленном сервере:
 
@@ -104,13 +107,18 @@ sudo docker compose -f up -d
 sudo docker compose -f ps
 ```
 
+---
+
 ## Технологии:
 
-- Python 3.11.1, 
-- Django 3.2.3, 
-- djangorestframework==3.12.4, 
-- PostgreSQL 13.10, 
+- Python 3.11.1,
+- Django 3.2.3,
+- djangorestframework==3.12.4,
+- PostgreSQL 13.10,
 - Docker.
-- python-decouple - Защита секретных данных с помощью пакета [Decouple](https://dontrepeatyourself.org/post/how-to-use-python-decouple-with-django/)
+- python-decouple - Защита секретных данных с помощью
+  пакета [Decouple](https://dontrepeatyourself.org/post/how-to-use-python-decouple-with-django/)
+
+---
 
 ## Автор: Eliseev-Sergey
