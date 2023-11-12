@@ -83,7 +83,9 @@ class CustomUserViewSet(UserViewSet):
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
-    queryset = Recipe.objects.all()
+    queryset = Recipe.objects.select_related(
+        'author'
+    ).prefetch_related('ingredients', 'tags').all()
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     pagination_class = CustomPagination
     filter_backends = (DjangoFilterBackend,)
@@ -92,20 +94,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-
         serializer.is_valid(raise_exception=True)
         serializer.validated_data['author'] = self.request.user
-        serializer.save()
-        serializer = CreateRecipeSerializer(
-            instance=serializer.instance,
-            context={'request': self.request}
-        )
+        return super().create(request, *args, **kwargs)
 
-        return Response(
-            serializer.data,
-            status=status.HTTP_201_CREATED,
-            headers=self.get_success_headers(serializer.data)
-        )
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
 
     def perform_update(self, serializer):
         return serializer.save(author=self.request.user)
@@ -170,6 +164,17 @@ class RecipeViewSet(viewsets.ModelViewSet):
             'ingredient__measurement_unit'
         ).annotate(total_amount=Sum('amount')).order_by('ingredient__name')
 
+        headers = {
+            'Content-Disposition': f'attachment; filename={filename}'
+        }
+
+        with open(filename, mode='w', encoding='UTF-8') as file:
+            file.write(self._make_shopping_cart(ingredients))
+
+        return FileResponse(open(filename, 'rb'), headers=headers)
+
+    @staticmethod
+    def _make_shopping_cart(ingredients):
         shop_carts = ''
         current_ingr = None
         total_amount = 0
@@ -194,11 +199,4 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 f'{total_amount}\n'
             )
 
-        headers = {
-            'Content-Disposition': f'attachment; filename={filename}'
-        }
-
-        with open(filename, mode='w', encoding='UTF-8') as file:
-            file.write(shop_carts)
-
-        return FileResponse(open(filename, 'rb'), headers=headers)
+        return shop_carts

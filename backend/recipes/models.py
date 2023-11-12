@@ -4,12 +4,24 @@ from django.core.validators import (
 from django.db import models
 
 from users.models import CustomUser
+from recipes.constants import (
+    FIELD_DEFAULT_LEN,
+    MIN_AMOUNT,
+    MIN_COOKING_TIME,
+    MAX_AMOUNT,
+    MAX_COOKING_TIME,
+    UNIT_LEN
+)
 
 
 class Ingredient(models.Model):
-    name = models.CharField(verbose_name='Название', max_length=150)
+    name = models.CharField(
+        verbose_name='Название',
+        max_length=FIELD_DEFAULT_LEN
+    )
     measurement_unit = models.CharField(
-        verbose_name='Единица измерения', max_length=10
+        verbose_name='Единица измерения',
+        max_length=UNIT_LEN
     )
 
     class Meta:
@@ -26,7 +38,7 @@ class Ingredient(models.Model):
 
 class Tag(models.Model):
     name = models.CharField(
-        verbose_name='Название', unique=True, max_length=150
+        verbose_name='Название', unique=True, max_length=FIELD_DEFAULT_LEN
     )
     color = models.CharField(
         verbose_name='Цветовой код',
@@ -39,7 +51,7 @@ class Tag(models.Model):
         help_text='Например, #49B64E'
     )
     slug = models.SlugField(
-        verbose_name='SLUG', unique=True, max_length=150
+        verbose_name='SLUG', unique=True, max_length=FIELD_DEFAULT_LEN
     )
 
     class Meta:
@@ -52,7 +64,7 @@ class Tag(models.Model):
 
 class Recipe(models.Model):
     name = models.CharField(
-        verbose_name='Название', max_length=150, unique=True
+        verbose_name='Название', max_length=FIELD_DEFAULT_LEN, unique=True
     )
     text = models.TextField(verbose_name='Описание')
     image = models.ImageField(
@@ -65,8 +77,14 @@ class Recipe(models.Model):
     cooking_time = models.PositiveSmallIntegerField(
         verbose_name='Время приготовления',
         validators=[
-            MinValueValidator(1, message='Мин. время приготовления 1'),
-            MaxValueValidator(1000, message='Макс. время приготовления 1000'),
+            MinValueValidator(
+                MIN_COOKING_TIME,
+                message=f'Мин. время приготовления {MIN_COOKING_TIME}'
+            ),
+            MaxValueValidator(
+                MAX_COOKING_TIME,
+                message=f'Макс. время приготовления {MAX_COOKING_TIME}'
+            ),
         ]
     )
     author = models.ForeignKey(
@@ -104,9 +122,12 @@ class IngredientInRecipe(models.Model):
     amount = models.PositiveSmallIntegerField(
         verbose_name='Количество',
         validators=[
-            MinValueValidator(1, message='Мин. кол-во ингредиентов 1'),
+            MinValueValidator(
+                MIN_AMOUNT,
+                message=f'Мин. кол-во ингредиентов {MIN_AMOUNT}'),
             MaxValueValidator(
-                10000, message='Макс. кол-во ингредиентов 10000'
+                MAX_AMOUNT,
+                message=f'Макс. кол-во ингредиентов {MAX_AMOUNT}'
             ),
         ]
     )

@@ -24,6 +24,10 @@ class CustomRecipeFilter(FilterSet):
         method='check_is_in_cart'
     )
 
+    class Meta:
+        model = Recipe
+        fields = ['tags', 'author', 'is_favorited', 'is_in_shopping_cart']
+
     def check_is_favorite(self, queryset, name, value):
         if value:
             return queryset.filter(favorites__user=self.request.user)
@@ -33,7 +37,3 @@ class CustomRecipeFilter(FilterSet):
         if value:
             return queryset.filter(shopping_carts__user=self.request.user)
         return queryset
-
-    class Meta:
-        model = Recipe
-        fields = ['tags', 'author', 'is_favorited', 'is_in_shopping_cart']
