@@ -5,7 +5,9 @@ from django.db import models
 
 from users.models import CustomUser
 from recipes.constants import (
+    COLOR_FIELD_LEN,
     FIELD_DEFAULT_LEN,
+    HEX_COLOR_REGEX,
     MIN_AMOUNT,
     MIN_COOKING_TIME,
     MAX_AMOUNT,
@@ -43,9 +45,9 @@ class Tag(models.Model):
     color = models.CharField(
         verbose_name='Цветовой код',
         unique=True,
-        max_length=7,
+        max_length=COLOR_FIELD_LEN,
         validators=[RegexValidator(
-            regex='^#(?:[A-Fa-f0-9]{3}){1,2}$',
+            regex=HEX_COLOR_REGEX,
             message='Неверный формат'
         )],
         help_text='Например, #49B64E'

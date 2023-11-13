@@ -3,6 +3,7 @@ from django.contrib import admin
 from recipes.models import (
     Favorite, Ingredient, IngredientInRecipe, Recipe, ShoppingCart, Tag
 )
+from recipes.validators import IngredientRecipeValidator
 
 
 @admin.register(Tag)
@@ -21,6 +22,10 @@ class IngredientAdmin(admin.ModelAdmin):
 
 class IngredientInRecipeAdmin(admin.TabularInline):
     model = IngredientInRecipe
+    min_num = 1
+    extra = 0
+    validate_min = True
+    formset = IngredientRecipeValidator
 
 
 @admin.register(Recipe)

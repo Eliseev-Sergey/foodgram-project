@@ -26,7 +26,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
         user = self.context.get('request').user
         return (
             user.is_authenticated
-            and user.follower.filter(author=obj.id).exists()
+            and user.follower.filter(author_id=obj.id).exists()
         )
 
 
@@ -255,6 +255,7 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         ingredients = validated_data.pop('ingredients')
         tags = validated_data.pop('tags')
+        validated_data['author'] = self.context.get('request').user
 
         recipe = Recipe.objects.create(**validated_data)
         self.create_ingredients(ingredients, recipe)
@@ -267,6 +268,7 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         instance.ingredients.clear()
         tags = validated_data.pop('tags')
         ingredients = validated_data.pop('ingredients')
+        validated_data['author'] = self.context.get('request').user
 
         instance.tags.set(tags)
         self.create_ingredients(ingredients, instance)

@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.validators import UnicodeUsernameValidator
+from django.core.exceptions import ValidationError
 from django.db import models
 
 from users.constants import EMAIL_LEN, USER_FIELD_LEN
@@ -59,9 +60,13 @@ class Subscription(models.Model):
                 fields=['user', 'author'],
                 name='subscriptions_unique'),
             models.CheckConstraint(
-                check=models.Q(user=models.F('author')),
+                check=~models.Q(user=models.F('author')),
                 name='self_subscription_denied')
         ]
+
+    def clean(self):
+        if self.user == self.author:
+            raise ValidationError('Подписка на самого себя запрещено')
 
     def __str__(self):
         return f'{self.user} подписан на {self.author}'

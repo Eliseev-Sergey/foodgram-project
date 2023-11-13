@@ -92,18 +92,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
     filterset_class = CustomRecipeFilter
     http_method_names = ['get', 'post', 'patch', 'delete']
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.validated_data['author'] = self.request.user
-        return super().create(request, *args, **kwargs)
-
-    def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
-
-    def perform_update(self, serializer):
-        return serializer.save(author=self.request.user)
-
     def get_serializer_class(self):
         if self.request.method == 'GET':
             return RecipeListSerializer
